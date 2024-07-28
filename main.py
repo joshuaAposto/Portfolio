@@ -7,20 +7,21 @@ st.markdown("""
     <style>
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: #fff;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 20px auto;
+        }
+        .sidebar .sidebar-content {
+            background: #1e3c72;
             padding: 20px;
-            background: rgba(0, 0, 0, 1.10);
-            border-radius: 1px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            color: #fff;
+        }
+        .sidebar .sidebar-content h1, .sidebar .sidebar-content p {
+            color: #ffd700;
+        }
+        .main-content {
+            margin-left: 220px;
+            padding: 20px;
         }
         .header {
             text-align: center;
@@ -32,13 +33,12 @@ st.markdown("""
             margin-bottom: 10px;
         }
         .profile-picture {
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             margin: 20px auto;
             display: block;
             border: 5px solid #ffd700;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
         .stats {
             display: flex;
@@ -61,15 +61,11 @@ st.markdown("""
             margin-bottom: 40px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            color: #ddd;
         }
         .section h2 {
             color: #ffd700;
             margin-bottom: 20px;
-        }
-        .section p {
-            color: #ddd;
-            line-height: 1.8;
         }
         .resume-btn {
             background-color: #1e3c72;
@@ -81,7 +77,7 @@ st.markdown("""
             text-decoration: none;
         }
         .resume-btn:hover {
-            background-color: #1e3c72;
+            background-color: #2a5298;
             transform: scale(1.05);
         }
         .btn {
@@ -108,7 +104,7 @@ st.markdown("""
         #portfolio h2 {
             font-size: 2.5em;
             font-weight: bold;
-            color: #007bff;    
+            color: #007bff;
             margin-bottom: 30px;
             position: relative;
             display: inline-block;
@@ -126,8 +122,26 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Sidebar navigation
-st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Home", "About Me", "Skills", "Live Clock", "Portfolio", "Resume", "Achievements", "AdSense", "Coming Soon"])
+st.sidebar.title("")
+st.sidebar.markdown("""
+    <div class="sidebar-content">
+        <h1>Joshua Apostol</h1>
+        <p>Web Developer | Designer</p>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about-me">About Me</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#resume">Resume</a></li>
+            <li><a href="#achievements">Achievements</a></li>
+            <li><a href="#adsense">AdSense</a></li>
+            <li><a href="#coming-soon">Coming Soon</a></li>
+        </ul>
+    </div>
+""", unsafe_allow_html=True)
+
+# Main content
+st.markdown('<div class="main-content">', unsafe_allow_html=True)
 
 # Header section
 st.markdown("""
@@ -156,25 +170,41 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Page content based on sidebar selection
-if page == "Home":
-    st.markdown("""
-        <section id="skills" class="section">
-            <h2>Welcome to my Portfolio</h2>
-            <p>Explore the sections using the sidebar to learn more about me and my work.</p>
-        </section>
-    """, unsafe_allow_html=True)
+# Live clock for Home page only
+st.markdown("""
+    <section id="home" class="section">
+        <h2>Welcome to my Portfolio</h2>
+        <p>Explore the sections using the sidebar to learn more about me and my work.</p>
+        <div id="live-clock-section" class="section">
+            <div id="liveClock" style="font-size: 2rem; font-family: 'Courier New', Courier, monospace; color: #ffd700;"></div>
+        </div>
+    </section>
+""", unsafe_allow_html=True)
 
-if page == "About Me":
-    st.markdown("""
+# Live clock script
+live_clock_script = """
+    <script>
+        function updateClock() {
+            const clockElement = document.getElementById('liveClock');
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            clockElement.textContent = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+"""
+st.markdown(live_clock_script, unsafe_allow_html=True)
+
+# Page content
+page_content = {
+    "About Me": """
         <section id="about-me" class="section">
             <h2>About Me</h2>
             <p>I’m passionate about learning new technologies and creating innovative projects. As a beginner in HTML, CSS, JS, and Node.js, I continually work on enhancing my skills and developing projects that inspire me.</p>
         </section>
-    """, unsafe_allow_html=True)
-
-if page == "Skills":
-    st.markdown("""
+    """,
+    "Skills": """
         <section id="skills" class="section">
             <h2>Skills</h2>
             <div class="skills-container">
@@ -196,33 +226,8 @@ if page == "Skills":
                 </div>
             </div>
         </section>
-    """, unsafe_allow_html=True)
-
-if page == "Live Clock":
-    st.markdown("""
-        <div id="live-clock-section" class="section">
-            <h2>Live Clock</h2>
-            <div id="liveClock" style="font-size: 2rem; font-family: 'Courier New', Courier, monospace;"></div>
-        </div>
-    """, unsafe_allow_html=True)
-
-    # Live clock script
-    live_clock_script = """
-        <script>
-            function updateClock() {
-                const clockElement = document.getElementById('liveClock');
-                const now = new Date();
-                const timeString = now.toLocaleTimeString();
-                clockElement.textContent = timeString;
-            }
-            setInterval(updateClock, 1000);
-            updateClock();
-        </script>
-    """
-    st.markdown(live_clock_script, unsafe_allow_html=True)
-
-if page == "Portfolio":
-    st.markdown("""
+    """,
+    "Portfolio": """
         <div id="portfolio" class="section">
             <h2>Portfolio</h2>
             <ul class="project-list">
@@ -238,44 +243,35 @@ if page == "Portfolio":
                 </li>
             </ul>
         </div>
-    """, unsafe_allow_html=True)
-
-if page == "Resume":
-    st.markdown("""
+    """,
+    "Resume": """
         <div id="resume-section" class="section">
             <h2>Resume</h2>
             <a href="#" class="resume-btn">Download Resume</a>
         </div>
-    """, unsafe_allow_html=True)
-
-if page == "Achievements":
-    st.markdown("""
+    """,
+    "Achievements": """
         <div id="achievements-section" class="section">
             <h2>Achievements</h2>
             <p>Certificate in Web Development from XYZ Academy</p>
-            <p>Completed 50+ projects on GitHub</p>
+            <p>Completed 100 Days of Code Challenge</p>
         </div>
-    """, unsafe_allow_html=True)
-
-if page == "AdSense":
-    st.markdown("""
+    """,
+    "AdSense": """
         <div id="adsense-section" class="section">
             <h2>AdSense</h2>
-            <p>Advertisements</p>
+            <p>AdSense ads will be displayed here.</p>
         </div>
-    """, unsafe_allow_html=True)
-
-if page == "Coming Soon":
-    st.markdown("""
+    """,
+    "Coming Soon": """
         <div id="coming-soon-section" class="section">
             <h2>Coming Soon</h2>
-            <p>Exciting new features are on the way!</p>
+            <p>Stay tuned for upcoming updates!</p>
         </div>
-    """, unsafe_allow_html=True)
+    """
+}
 
-# Footer section
-st.markdown("""
-    <footer>
-        <p>&copy; 2024 Joshua Apostol. All rights reserved.</p>
-    </footer>
-""", unsafe_allow_html=True)
+for section, content in page_content.items():
+    st.markdown(content, unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
